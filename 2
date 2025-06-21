@@ -1,0 +1,59 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class RingArray {
+
+    public static void main(String[] args) {
+        int m = 5; // высота
+        int n = 5; // ширина
+
+        int[][] array = new int[m][n];
+        fillArray(array, m, n);
+        writeArrayToFile(array, "output.txt");
+    }
+
+    private static void fillArray(int[][] array, int m, int n) {
+        int layers = Math.min(m, n) / 2; // Количество колец
+        for (int layer = 0; layer <= layers; layer++) {
+            int value = layer + 1;
+
+            // Заполнение верхней строки
+            for (int i = layer; i < n - layer; i++) {
+                array[layer][i] = value;
+            }
+
+            // Заполнение правого столбца
+            for (int i = layer + 1; i < m - layer; i++) {
+                array[i][n - layer - 1] = value;
+            }
+
+            // Заполнение нижней строки
+            if (m - layer - 1 > layer) {
+                for (int i = n - layer - 1; i >= layer; i--) {
+                    array[m - layer - 1][i] = value;
+                }
+            }
+
+            // Заполнение левого столбца
+            if (n - layer - 1 > layer) {
+                for (int i = m - layer - 2; i > layer; i--) {
+                    array[i][layer] = value;
+                }
+            }
+        }
+    }
+
+    private static void writeArrayToFile(int[][] array, String filename) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (int[] row : array) {
+                for (int value : row) {
+                    writer.write(value + " ");
+                }
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
