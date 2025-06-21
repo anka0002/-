@@ -1,0 +1,44 @@
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class TextTransformer {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите текст:");
+        String inputText = scanner.nextLine();
+
+        String transformedText = transformText(inputText);
+        System.out.println("Изменённый текст:");
+        System.out.println(transformedText);
+    }
+
+    private static String transformText(String text) {
+        StringBuilder result = new StringBuilder();
+        // Регулярное выражение для поиска слов
+        Pattern pattern = Pattern.compile("[\w']+|[.,!?;]");
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            String word = matcher.group();
+            if (word.matches("[\w']+")) { // Проверяем, является ли это словом
+                // Перемещаем первую букву в конец и добавляем "ауч"
+                String transformedWord = word.substring(1) + word.charAt(0) + "ауч";
+                result.append(transformedWord);
+            } else {
+                // Если это знак препинания, просто добавляем его без изменений
+                result.append(word);
+            }
+            // Добавляем пробел после каждого слова или знака препинания, кроме последнего
+            result.append(" ");
+        }
+
+        // Удаляем последний пробел, если он есть
+        if (result.length() > 0) {
+            result.setLength(result.length() - 1);
+        }
+
+        return result.toString();
+    }
+}
